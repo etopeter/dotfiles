@@ -1,11 +1,12 @@
 # Path to your oh-my-zsh installation.
-  export ZSH=/Users/pio/.oh-my-zsh
+export ZSH=/Users/pio/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="sorin"
+#ZSH_THEME="sorin"
+ZSH_THEME="terminalparty"
 #POWERLEVEL9K_MODE="awesome-fontconfig"
 #POWERLEVEL9K_MODE='awesome-patched'
 
@@ -51,11 +52,11 @@ ZSH_THEME="sorin"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker tmux theme history history-substring-search)
+plugins=(git docker)
 
 # User configuration
 
-export PATH="/Users/pio/.pyenv/plugins/pyenv-virtualenv/shims:/Users/pio/.pyenv/libexec:/Users/pio/.pyenv/plugins/python-build/bin:/Users/pio/.pyenv/plugins/pyenv-virtualenv/bin:/Users/pio/.pyenv/plugins/pyenv-update/bin:/Users/pio/.pyenv/plugins/pyenv-installer/bin:/Users/pio/.pyenv/plugins/pyenv-doctor/bin:/Users/pio/.pyenv/shims:/Users/pio/.pyenv/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/pio/dev/go/bin:/Users/pio/.fzf/bin"
+export PATH="/Users/pio/.pyenv/plugins/pyenv-virtualenv/shims:/Users/pio/.pyenv/libexec:/Users/pio/.pyenv/plugins/python-build/bin:/Users/pio/.pyenv/plugins/pyenv-virtualenv/bin:/Users/pio/.pyenv/plugins/pyenv-update/bin:/Users/pio/.pyenv/plugins/pyenv-installer/bin:/Users/pio/.pyenv/plugins/pyenv-doctor/bin:/Users/pio/.pyenv/shims:/Users/pio/.pyenv/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/pio/dev/go/bin:/Users/pio/.fzf/bin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -86,6 +87,9 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # GOlang
 export GOPATH=$HOME/dev/go
+export GOOS=darwin
+export GOARCH=amd64
+export GOBIN=$GOROOT/bin
 export PATH="$PATH:$GOPATH/bin"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin:$PATH"
@@ -98,3 +102,12 @@ eval "$(pyenv virtualenv-init -)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export EDITOR=vim
+
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+alias vimgo='vim -u ~/.vimrc.go'
+
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH="/usr/local/Cellar/mongodb/3.2.5/bin:$PATH"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
