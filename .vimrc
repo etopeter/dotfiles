@@ -98,8 +98,14 @@ nmap <leader>t :term<cr>
 
 
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
-
+fun! UpdateMatch()
+    if &ft !~ '^\%(Jenkinsfile\|rb\)$'
+        match OverLength /\%181v.*/
+    else
+        match NONE
+    endif
+endfun
+autocmd BufEnter,BufWinEnter * call UpdateMatch()
 
 :let g:notes_directories = ['~/Dropbox/Notes']
 imap <C-]> <C-o>:SearchNotes<CR>
@@ -158,3 +164,12 @@ let g:pymode_folding = 0
   \: "\<TAB>"
 
 "}}}
+
+"" associate Jenkinfile* with groovy filetype
+au BufRead,BufNewFile Jenkinsfile* setfiletype groovy
+
+" 1. base64-encode(visual-selection) -> F2 -> encoded base64-string
+:vnoremap <F2> c<c-r>=system("base64 -w 0", @")<cr><esc>
+
+" 2. base64-decode(visual-selection) -> F3 -> decoded string
+:vnoremap <F3> c<c-r>=system("base64 -d", @")<cr> 
