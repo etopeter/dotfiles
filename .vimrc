@@ -32,7 +32,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'bling/vim-airline'
 Plug 'tomtom/tcomment_vim'
-Plug 'xolox/vim-notes'
+"Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
 
 " Git Helpers

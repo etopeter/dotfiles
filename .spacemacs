@@ -18,6 +18,7 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     php
      ;; better-defaults
      (semantic :disabled-for emacs-lisp)
      (shell :variables shell-default-shell 'eshell)
