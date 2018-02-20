@@ -18,6 +18,7 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     html
      php
      ;; better-defaults
      (semantic :disabled-for emacs-lisp)
@@ -256,6 +257,7 @@ user code here.  The exception is org related code, which should be placed in
 `dotspacemacs/user-config'."
   (setq-default
    evil-shift-round nil
+   org-startup-with-inline-images t
    flycheck-check-syntax-automatically '(save mode-enabled)
    )
 
@@ -286,6 +288,26 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
 
+  (setq-default org-download-image-dir "~/Dropbox/images")
+
+  (defun refile-and-keep ()
+    "refile a subtree and keep the original by yanking it back"
+    (interactive)
+    (org-copy-subtree)
+    (org-refile)
+    (org-paste-subtree)
+    ;;  (switch-to-buffer nil)
+    )
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                            (org-agenda-files :maxlevel . 9)))
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+
+
+
+
+
+
   (use-package groovy-mode
     :ensure t
     :config
@@ -302,6 +324,7 @@ layers configuration. You are free to put any user code."
   (autoload 'groovy-mode "groovy-mode" "Groovy editing mode." t)
   (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
   (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode))
+(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
 
   (use-package flycheck
     :ensure t
@@ -309,7 +332,21 @@ layers configuration. You are free to put any user code."
 
   ;; automode
   (add-to-list 'auto-mode-alist '("Jenkinsfile$" . groovy-mode))
-  (setq deft-directory "~/Dropbox/Notes")
+  (setq deft-directory "~/Dropbox/notes")
+  (setq deft-extension "\\(\\.org\\'\\|\\.txt\\'\\)")
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+olp+datetree "~/Dropbox/notes/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")))
+
+  ;; Overwrite `deft-current-files` for the `deft-buffer-setup` and limit it to 30 entries
+  (defun anks-deft-limiting-fn (orig-fun &rest args)
+    (let
+        ((deft-current-files (-take 30 deft-current-files)))
+      (apply orig-fun args)))
+
+  (advice-add 'deft-buffer-setup :around #'anks-deft-limiting-fn)
 
   ;; mobileorg settings
   (setq org-directory "~/Dropbox/org")
@@ -328,6 +365,17 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+
+ '(org-agenda-files (quote
+                     (
+                      ;; Following are filed by heading
+                      "~/Dropbox/notes/journal.org"
+                      "~/Dropbox/notes/cpf.org"
+                      "~/Dropbox/notes/ebates.org"
+                      "~/Dropbox/notes/taos.org"
+                      "~/Dropbox/notes/appetize.org"
+                      )))
+
  '(package-selected-packages
    (quote
     (smex ibuffer-projectile slack emojify circe oauth2 websocket wolfram-mode thrift stickyfunc-enhance stan-mode srefactor scad-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake qml-mode minitest matlab-mode magit-gh-pulls julia-mode helm-gtags github-search github-clone async github-browse-file gist gh marshal logito ht ggtags fasd engine-mode chruby bundler inf-ruby arduino-mode yapfify sql-indent pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic yaml-mode xterm-color ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package unicode-fonts toc-org spacemacs-theme spaceline solarized-theme smeargle shell-pop restart-emacs ranger rainbow-delimiters quelpa popwin persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text monokai-theme mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint jinja2-mode insert-shebang info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag groovy-mode google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav dumb-jump deft define-word company-statistics company-shell column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile ansible-doc ansible aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
