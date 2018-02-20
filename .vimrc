@@ -22,7 +22,7 @@ Plug 'elzr/vim-json'
 Plug 'Yggdroot/indentLine'
 "Plug 'valloric/MatchTagAlways'
 Plug 'Raimondi/delimitMate'
-" Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 Plug 'benekastah/neomake'
 Plug 'junegunn/vim-easy-align'
 " Plug 'tmhedberg/matchit'
@@ -173,3 +173,17 @@ au BufRead,BufNewFile Jenkinsfile* setfiletype groovy
 
 " 2. base64-decode(visual-selection) -> F3 -> decoded string
 :vnoremap <F3> c<c-r>=system("base64 -d", @")<cr> 
+
+
+" Syntastic
+" set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height = 3 
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_ruby_rubocop_exec = '/usr/local/bin/cookstyle'
