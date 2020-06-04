@@ -1,6 +1,6 @@
 ;;; .doom.d/config.el -*- lexical-binding: t; -*-
 
-(server-start)
+;;(server-start)
 (setq-default user-full-name    "Peter Strzyzewski"
               user-mail-address "peters2222@gmail.com"
               ;; fill-column 100
@@ -48,10 +48,10 @@
 (use-package! org-roam
   :commands (org-roam-insert org-roam-find-file org-roam)
   :init
-  (setq org-directory "~/org/"
-        org-roam-directory "~/org/"
+  (setq org-directory "~/org"
+        org-roam-directory "~/org/roam"
         org-roam-graph-viewer "/usr/bin/open"
-        org-roam-index-file "~/org/index.org"
+        org-roam-index-file "~/org/roam/index.org"
         org-roam-buffer-width 0.4
         org-roam-completion-system 'helm
         )
@@ -68,13 +68,46 @@
   (org-roam-mode +1))
 
 (use-package org-journal
+  :ensure t
+  :defer t
+  :after org
+  :config
+  (setq org-journal-dir "~/org/roam")
   :bind
   ("C-c n j" . org-journal-new-entry)
   :custom
   (org-journal-date-prefix "#+TITLE: ")
   (org-journal-file-format "%Y-%m-%d.org")
-  (org-journal-dir "~/org/")
-  (org-journal-date-format "%A, %d %B %Y"))
+  (org-journal-date-format "%A, %d %B %Y")
+  (org-journal-enable-agenda-integration t)
+  )
+
+;; in ~/.doom.d/+bindings.el
+(map! :leader
+      (:prefix ("j" . "journal") ;; org-journal bindings
+        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+        :desc "Open next entry" "n" #'org-journal-open-next-entry
+        :desc "Search journal" "s" #'org-journal-search-forever))
+
+;; The built-in calendar mode mappings for org-journal
+;; conflict with evil bindings
+(map!
+ (:map calendar-mode-map
+   :n "o" #'org-journal-display-entry
+   :n "p" #'org-journal-previous-entry
+   :n "n" #'org-journal-next-entry
+   :n "O" #'org-journal-new-date-entry))
+
+;; Local leader (<SPC m>) bindings for org-journal in calendar-mode
+;; I was running out of bindings, and these are used less frequently
+;; so it is convenient to have them under the local leader prefix
+(map!
+ :map (calendar-mode-map)
+ :localleader
+ "w" #'org-journal-search-calendar-week
+ "m" #'org-journal-search-calendar-month
+ "y" #'org-journal-search-calendar-year)
 
 (require 'company-org-roam)
 (push 'company-org-roam company-backends)
@@ -242,7 +275,9 @@ and names the estimation error column."
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org")
-  (deft-directory "~/org/"))
+  (deft-directory "~/org/")
+  (deft-ignore-file-regexp "\\(?:.sync\\)")
+  )
 
 
 ;; Start Emacs maximized
@@ -255,3 +290,23 @@ and names the estimation error column."
 
 
 (setq ob-mermaid-cli-path "/usr/local/bin/mmdc")
+
+
+(use-package org-download
+  :after org
+  :bind
+  (:map org-mode-map
+        (("s-Y" . org-download-screenshot)
+         ("s-y" . org-download-yank)))
+  :custom
+  org-download-image-dir "~/org/roam/img/"
+  )
+
+
+(use-package! org-re-reveal
+  :init
+  (setq org-reveal-external-plugins '(
+                                      "{src: '%splugin/menu/menu.js'}"
+                                      "{ src: '%splugin/quiz/js/quiz.js', async: true, callback: function() { prepareQuizzes({preventUnanswered: true, skipStartButton: true}); } }"
+                                      ))
+  )
